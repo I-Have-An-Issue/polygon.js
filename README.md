@@ -1,5 +1,5 @@
 # polygon.js 
-![issues](https://img.shields.io/github/issues/I-Have-An-Issue/polygon.js) ![forks](https://img.shields.io/github/forks/I-Have-An-Issue/polygon.js) ![stars](https://img.shields.io/github/stars/I-Have-An-Issue/polygon.js) ![license](https://img.shields.io/github/license/I-Have-An-Issue/polygon.js)  
+![issues](https://img.shields.io/github/issues/I-Have-An-Issue/polygon.js) ![forks](https://img.shields.io/github/forks/I-Have-An-Issue/polygon.js) ![stars](https://img.shields.io/github/stars/I-Have-An-Issue/polygon.js) ![license](https://img.shields.io/github/license/I-Have-An-Issue/polygon.js) ![Discord](https://img.shields.io/discord/819996693210202143?color=%235865F2&logo=discord)  
 [![forthebadge](https://forthebadge.com/images/badges/0-percent-optimized.svg)](https://forthebadge.com)
 [![forthebadge](https://forthebadge.com/images/badges/mom-made-pizza-rolls.svg)](https://forthebadge.com)
 [![forthebadge](https://forthebadge.com/images/badges/powered-by-comcast.svg)](https://forthebadge.com)
