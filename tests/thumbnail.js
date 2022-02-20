@@ -9,8 +9,8 @@ const client = new Polygon.Client(username, password)
     console.log(`[?] Waiting 5 seconds.`)
     await new Promise(resolve => setTimeout(resolve, 5000))
 
-    const ping = await client.ping()
-    ping ? console.log(`[✓] Friend requests: ${ping.friendRequests}`) : console.log(`[x] Ping failed!`)
+    const thumb = await client.thumbnail()
+    thumb ? console.log(`[✓] Thumbnail: ${thumb}`) : console.log(`[x] Thumbnail failed!`)
 
     await client.logout() ? console.log(`[✓] Logout success!`) : console.log(`[x] Logout failed!`)
 })()
