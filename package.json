@@ -1,6 +1,6 @@
 {
   "name": "@i-have-an-issue/polygon.js",
-  "version": "2.0.0",
+  "version": "2.1.0",
   "description": "A package for interacting with Project Polygon's APIs",
   "main": "src/index.js",
   "scripts": {
@@ -11,7 +11,7 @@
     "url": "https://github.com/I-Have-An-Issue/polygon.js.git"
   },
   "author": "I-Have-An-Issue",
-  "license": "GPL-2.0-only",
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/I-Have-An-Issue/polygon.js/issues"
   },

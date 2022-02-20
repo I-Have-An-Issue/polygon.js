@@ -42,6 +42,7 @@ class User {
                 data.append("status", text)
     
                 polygon.post("/api/account/update-status", data).then((response) => {
+                    if (response.status !== 200) return resolve(false)
                     resolve(response.data.success)
                 }).catch(e => reject(e))
             })
@@ -51,11 +52,21 @@ class User {
     info() {
         return new Promise(async (resolve, reject) => {
             polygon.get("/user").then((response) => {
+                if (response.status !== 200) return resolve(false)
                 const $ = cheerio.load(response.data)
                 const link = $(`a[class="nav-link mr-2"]`)
                 const username = link.text()
                 const id = new URL(`https://polygon.pizzaboxer.xyz${link.attr("href")}`).searchParams.get("ID")
                 resolve({ username, id })
+            }).catch(e => reject(e))
+        })
+    }
+
+    currency() {
+        return new Promise(async (resolve, reject) => {
+            api.get("/currency/balance").then((response) => {
+                if (response.status !== 200) return resolve(false)
+                resolve(response.data[Object.keys(response.data)[0]])
             }).catch(e => reject(e))
         })
     }
