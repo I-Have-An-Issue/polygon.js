@@ -1,13 +1,29 @@
-const { polygon, api, cdn } = require("./modules/polygon")
+const { polygon, cdn } = require("./modules/polygon")
 const cheerio = require("cheerio")
-const { removeClass } = require("cheerio/lib/api/attributes")
 
+/**
+ * Represents a Project Polygon user.
+ */
 class User {
+    /**
+     * @param {string} username 
+     * @param {number} id 
+     */
     constructor(username, id) { 
+        /**
+         * @type {string}
+         */
         this.username = username
+        /**
+         * @type {number}
+         */
         this.id = id
     }
 
+    /**
+     * Get the 2D thumbnail of the user.
+     * @returns {Promise<boolean|string>}
+     */
     thumbnail() {
         return new Promise((resolve, reject) => {
             polygon.get(`/user?id=${this.id}`).then((response) => {
@@ -18,6 +34,11 @@ class User {
         })
     }
 
+    /**
+     * Returns an object containing paths to access the user's 3D files on Polygon's CDN.
+     * @author https://github.com/kickturn
+     * @returns {Promise<boolean|object>}
+     */
     three_d() {
         return new Promise((resolve, reject) => {
             polygon.get(`/avatar-thumbnail-3d/json?userId=${this.id}`).then((response) => {
@@ -29,6 +50,11 @@ class User {
         })
     }
 
+    /**
+     * Returns the raw OBJ of the user's model.
+     * @author https://github.com/kickturn
+     * @returns {Promise<boolean|string>}
+     */
     obj() {
         return new Promise((resolve, reject) => {
             this.three_d().then((response) => {
@@ -39,6 +65,11 @@ class User {
         })
     }
 
+    /**
+     * Returns the raw MTL of the user's model.
+     * @author https://github.com/kickturn
+     * @returns {Promise<boolean|string>}
+     */
     mtl() {
         return new Promise((resolve, reject) => {
             this.three_d().then((response) => {

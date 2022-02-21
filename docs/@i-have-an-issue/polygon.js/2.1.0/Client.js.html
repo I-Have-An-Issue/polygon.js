@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Client.js - Documentation</title>
+
+    <script src="scripts/prettify/prettify.js"></script>
+    <script src="scripts/prettify/lang-css.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+<body>
+
+<input type="checkbox" id="nav-trigger" class="nav-trigger" />
+<label for="nav-trigger" class="navicon-button x">
+  <div class="navicon"></div>
+</label>
+
+<label for="nav-trigger" class="overlay"></label>
+
+<nav>
+    <li class="nav-link nav-home-link"><a href="index.html">Home</a></li><li class="nav-heading">Classes</li><li class="nav-heading"><span class="nav-item-type type-class">C</span><span class="nav-item-name"><a href="Client.html">Client</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="Client.html#currency">currency</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="Client.html#friendRequests">friendRequests</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="Client.html#login">login</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="Client.html#logout">logout</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="Client.html#mtl">mtl</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="Client.html#obj">obj</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="Client.html#ping">ping</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="Client.html#setStatus">setStatus</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="Client.html#three_d">three_d</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="Client.html#thumbnail">thumbnail</a></span></li><li class="nav-heading"><span class="nav-item-type type-class">C</span><span class="nav-item-name"><a href="User.html">User</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="User.html#mtl">mtl</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="User.html#obj">obj</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="User.html#three_d">three_d</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="User.html#thumbnail">thumbnail</a></span></li>
+</nav>
+
+<div id="main">
+    
+    <h1 class="page-title">Client.js</h1>
+    
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>const User = require("./User")
+const { polygon, api } = require("./modules/polygon")
+const cheerio = require("cheerio")
+
+/**
+ * Represents a Project Polygon user that be used to interact with the site.
+ * @extends User
+ */
+class Client extends User {
+    #_credentials
+    /**
+     * @param {string} username
+     * @param {string} password
+     */
+    constructor(username, password) {
+        super()
+        this.#_credentials = { username, password }
+        this.username = username
+        this.id = 0
+    }
+
+    #refreshCsrf() {
+        return new Promise(resolve => {
+            polygon.get("/home").then(() => resolve(true))
+        })
+    }
+
+    /**
+     * Create a new session with the provided credentials.
+     * @returns {Promise&lt;boolean>}
+     */
+    login() {
+        return new Promise((resolve, reject) => {
+            const data = new URLSearchParams()
+            data.append("username", this.#_credentials.username)
+            data.append("password", this.#_credentials.password)
+
+            polygon.post("/login", data).then((response) => {
+                if (response.status !== 302) return resolve(false)
+
+                polygon.get("/user").then((response) => {
+                    if (response.status !== 200) return resolve(false)
+                    const $ = cheerio.load(response.data)
+                    const link = $(`a[class="nav-link mr-2"]`)
+                    this.id = new URL(`https://polygon.pizzaboxer.xyz${link.attr("href")}`).searchParams.get("ID")
+                    resolve(true)
+                }).catch(e => reject(e))
+            }).catch(e => reject(e))
+        })
+    }
+
+    /**
+     * Destroy the current session.
+     * @returns {Promise&lt;boolean>}
+     */
+    logout() {
+        return new Promise(async (resolve, reject) => {
+            polygon.get("/logout").then((response) => {
+                if (response.status == 200) return resolve(true)
+                resolve(false)
+            }).catch(e => reject(e))
+        })
+    }
+
+    /**
+     * Update the user's status.
+     * @param {string} text 
+     * @returns {Promise&lt;boolean>}
+     */
+    setStatus(text) {
+        return new Promise(async (resolve, reject) => {
+            this.#refreshCsrf().then(() => {
+                const data = new URLSearchParams()
+                data.append("status", text)
+    
+                polygon.post("/api/account/update-status", data).then((response) => {
+                    if (response.status !== 200) return resolve(false)
+                    resolve(response.data.success)
+                }).catch(e => reject(e))
+            })
+        })
+    }
+
+    /**
+     * Get the current amount of Pizzas the user has.
+     * @returns {Promise&lt;number|boolean>}
+     */
+    currency() {
+        return new Promise(async (resolve, reject) => {
+            api.get("/currency/balance").then((response) => {
+                if (response.status !== 200) return resolve(false)
+                resolve(response.data[Object.keys(response.data)[0]])
+            }).catch(e => reject(e))
+        })
+    }
+
+    /**
+     * Changes the user's onsite status and returns the current amount of pending friend requests.
+     * @returns {Promise&lt;object|boolean>}
+     */
+    ping() {
+        return new Promise(async (resolve, reject) => {
+            this.#refreshCsrf().then(() => {
+                polygon.post("/api/account/update-ping").then((response) => {
+                    if (response.status !== 200) return resolve(false)
+                    resolve({ success: response.data.success, friendRequests: response.data.friendRequests })
+                }).catch(e => reject(e))
+            })
+        })
+    }
+
+    /**
+     * Returns the user's current amount of pending friend requests.
+     * @returns {Promise&lt;object|boolean>}
+     */
+    friendRequests() {
+        return new Promise(async (resolve, reject) => {
+            this.#refreshCsrf().then(() => {
+                polygon.post("/api/account/update-ping").then((response) => {
+                    if (response.status !== 200) return resolve(false)
+                    resolve(response.data.friendRequests)
+                }).catch(e => reject(e))
+            })
+        })
+    }
+}
+
+module.exports = Client</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<br class="clear">
+
+<footer>
+    Generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.10</a> on Mon Feb 21 2022 15:42:01 GMT-0500 (Eastern Standard Time) using the Minami theme.
+</footer>
+
+<script>prettyPrint();</script>
+<script src="scripts/linenumber.js"></script>
+</body>
+</html>

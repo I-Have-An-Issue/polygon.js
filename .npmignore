@@ -1,0 +1,5 @@
+docs
+tests
+.gitignore
+.jsdoc.json
+.github

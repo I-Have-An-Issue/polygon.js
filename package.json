@@ -4,7 +4,7 @@
   "description": "A package for interacting with Project Polygon's APIs",
   "main": "src/index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "generate-docs": "node_modules/.bin/jsdoc --configure .jsdoc.json --verbose"
   },
   "repository": {
     "type": "git",
@@ -12,6 +12,9 @@
   },
   "author": "I-Have-An-Issue",
   "license": "MIT",
+  "opts": {
+    "template": "node_modules/minami"
+  },
   "bugs": {
     "url": "https://github.com/I-Have-An-Issue/polygon.js/issues"
   },
@@ -19,5 +22,9 @@
   "dependencies": {
     "axios": "^0.26.0",
     "cheerio": "^1.0.0-rc.10"
+  },
+  "devDependencies": {
+    "jsdoc": "^3.6.10",
+    "minami": "^1.2.3"
   }
 }

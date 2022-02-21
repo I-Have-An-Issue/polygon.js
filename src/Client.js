@@ -2,13 +2,21 @@ const User = require("./User")
 const { polygon, api } = require("./modules/polygon")
 const cheerio = require("cheerio")
 
+/**
+ * Represents a Project Polygon user that be used to interact with the site.
+ * @extends User
+ */
 class Client extends User {
     #_credentials
+    /**
+     * @param {string} username
+     * @param {string} password
+     */
     constructor(username, password) {
         super()
         this.#_credentials = { username, password }
         this.username = username
-        this.id = null
+        this.id = 0
     }
 
     #refreshCsrf() {
@@ -17,6 +25,10 @@ class Client extends User {
         })
     }
 
+    /**
+     * Create a new session with the provided credentials.
+     * @returns {Promise<boolean>}
+     */
     login() {
         return new Promise((resolve, reject) => {
             const data = new URLSearchParams()
@@ -37,6 +49,10 @@ class Client extends User {
         })
     }
 
+    /**
+     * Destroy the current session.
+     * @returns {Promise<boolean>}
+     */
     logout() {
         return new Promise(async (resolve, reject) => {
             polygon.get("/logout").then((response) => {
@@ -46,6 +62,11 @@ class Client extends User {
         })
     }
 
+    /**
+     * Update the user's status.
+     * @param {string} text 
+     * @returns {Promise<boolean>}
+     */
     setStatus(text) {
         return new Promise(async (resolve, reject) => {
             this.#refreshCsrf().then(() => {
@@ -60,6 +81,10 @@ class Client extends User {
         })
     }
 
+    /**
+     * Get the current amount of Pizzas the user has.
+     * @returns {Promise<number|boolean>}
+     */
     currency() {
         return new Promise(async (resolve, reject) => {
             api.get("/currency/balance").then((response) => {
@@ -69,6 +94,10 @@ class Client extends User {
         })
     }
 
+    /**
+     * Changes the user's onsite status and returns the current amount of pending friend requests.
+     * @returns {Promise<object|boolean>}
+     */
     ping() {
         return new Promise(async (resolve, reject) => {
             this.#refreshCsrf().then(() => {
@@ -80,6 +109,10 @@ class Client extends User {
         })
     }
 
+    /**
+     * Returns the user's current amount of pending friend requests.
+     * @returns {Promise<object|boolean>}
+     */
     friendRequests() {
         return new Promise(async (resolve, reject) => {
             this.#refreshCsrf().then(() => {
