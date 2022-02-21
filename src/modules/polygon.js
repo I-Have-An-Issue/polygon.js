@@ -37,9 +37,11 @@ polygon.interceptors.response.use(async (response) => {
 
 const api = axios.create(Object.assign(options, { baseURL: "https://polygonapi.pizzaboxer.xyz" }))
 
+const cdn = axios.create(Object.assign(options, { baseURL: "https://polygoncdn.pizzaboxer.xyz" }))
+
 api.interceptors.request.use((config) => {
     if (session) config.headers["Cookie"] = `polygon_session=${session}`
     return config
 }, (error) => { return Promise.reject(error) })
 
-module.exports = { polygon, api }
+module.exports = { polygon, api, cdn }
