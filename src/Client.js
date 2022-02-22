@@ -95,7 +95,7 @@ class Client extends User {
     }
 
     /**
-     * Changes the user's onsite status and returns the current amount of pending friend requests.
+     * Set the user's onsite status to "online", and returns the current amount of pending friend requests.
      * @returns {Promise<object|boolean>}
      */
     ping() {
@@ -121,6 +121,20 @@ class Client extends User {
                     resolve(response.data.friendRequests)
                 }).catch(e => reject(e))
             })
+        })
+    }
+
+    /**
+     * Get a Project Polygon user by UserId. 
+     * @param {number} id 
+     * @returns {Promise<boolean|User>}
+     */
+    getUser(id) {
+        return new Promise(async (resolve, reject) => {
+            api.get(`/users/${id}`).then((response) => {
+                if (response.status !== 200) return resolve(false)
+                resolve(new User(response.data.Username, response.data.Id))
+            }).catch(e => reject(e))
         })
     }
 }

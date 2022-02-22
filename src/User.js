@@ -44,7 +44,7 @@ class User {
             polygon.get(`/avatar-thumbnail-3d/json?userId=${this.id}`).then((response) => {
                 if (response.status !== 200) return resolve(false)
                 polygon.get(response.data.Url).then((res) => {
-                    resolve(res.data);
+                    resolve(res.data)
                 }).catch(e => reject(e))
             }).catch(e => reject(e))
         })
@@ -59,9 +59,9 @@ class User {
         return new Promise((resolve, reject) => {
             this.three_d().then((response) => {
                 cdn.get(response.obj).then((res) => {
-                    resolve(res.data);
+                    resolve(res.data)
                 }).catch(e => reject(e))
-            }).catch(e => reject(e));
+            }).catch(e => reject(e))
         })
     }
 
@@ -74,9 +74,24 @@ class User {
         return new Promise((resolve, reject) => {
             this.three_d().then((response) => {
                 cdn.get(response.mtl).then((res) => {
-                    resolve(res.data);
+                    resolve(res.data)
                 }).catch(e => reject(e))
-            }).catch(e => reject(e));
+            }).catch(e => reject(e))
+        })
+    }
+
+    /**
+     * Returns the user's Blurb.
+     * @returns {Promise<boolean|string>}
+     */
+    getBlurb() {
+        return new Promise((resolve, reject) => {
+            polygon.get(`/user?id=${this.id}`).then((response) => {
+                if (response.status !== 200) return resolve(false)
+                const $ = cheerio.load(response.data)
+                const blurb = $(`p[class="text-break"]`).text()
+                resolve(blurb)
+            }).catch(e => reject(e))
         })
     }
 }
