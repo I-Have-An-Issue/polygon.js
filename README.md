@@ -10,10 +10,8 @@
 ## About
 polygon.js is a promise-based NPM package intended to make interacting with Project Polygon's API easy and accessible via a node.js project.
 
-## Prerequisites
-- [**node.js**](https://nodejs.org/en/download/)
-- A [**Polygon**](https://polygon.pizzaboxer.xyz/) account
-- An internet connection
+## Documentation
+https://i-have-an-issue.github.io/polygon.js/
 
 ## Installation
 `npm i @i-have-an-issue/polygon.js`
